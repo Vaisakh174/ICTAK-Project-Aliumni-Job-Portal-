@@ -30,7 +30,7 @@ function verifytoken(req, res, next) {
 
 
 //get all list (get) for data
-router.get('/getApproved', async (req, res) => {
+router.get('/getApproved',verifytoken, async (req, res) => {
 
     try {
         let list = await approvedPost.find();
@@ -52,7 +52,7 @@ router.get('/getApproved', async (req, res) => {
 
 
 //add data when approved (post)
-router.post('/posted', async (req, res) => {
+router.post('/posted',verifytoken, async (req, res) => {
     // console.log("hr",req.body.Jobname);
     try {
         const DateNow = Date.now();
@@ -98,7 +98,7 @@ router.post('/posted', async (req, res) => {
 });
 
 // delete data
-router.delete('/deleted/:id', async (req, res) => {
+router.delete('/deleted/:id',verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -175,7 +175,7 @@ router.post('/post', async (req, res) => {
 
 
 //get all list (get) for data
-router.get('/getall', async (req, res) => {
+router.get('/getall',verifytoken, async (req, res) => {
 
     try {
         let list = await approvePost.find();
@@ -191,7 +191,7 @@ router.get('/getall', async (req, res) => {
 });
 
 // fetch single data (get)
-router.get('/getsingle/:id', async (req, res) => {
+router.get('/getsingle/:id',verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -205,7 +205,7 @@ router.get('/getsingle/:id', async (req, res) => {
 });
 
 //apply job
-router.post('/apply', async (req, res) => {
+router.post('/apply',verifytoken, async (req, res) => {
     console.log("*****", req.body.alumniData);
     console.log("*****", req.body.postData);
     try {
@@ -284,7 +284,7 @@ router.post('/upload',upload.single('file'), (req, res, next) => {
 
 
 // delete data
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id',verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -299,7 +299,7 @@ router.delete('/delete/:id', async (req, res) => {
 });
 
 // update data
-router.put('/update', async (req, res) => {
+router.put('/update',verifytoken, async (req, res) => {
 
     try {
         let id = req.body._id;
