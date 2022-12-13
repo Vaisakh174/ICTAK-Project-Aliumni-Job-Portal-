@@ -19,24 +19,27 @@ router.post('/signup', async (req, res) => {
     }
 
 
-    admin.findOne({ email: item.email }, async (err, foundResults) => {
+    let foundResults=await admin.findOne({ email: item.email })
+        
+        // , async (err, foundResults) => {
 
-        console.log("data from signup body", foundResults, err)
+        // console.log("data from signup body", foundResults)
         
         if (foundResults == null) {
             console.log("no matching email found");
 
-            try {
+        //     try {
+ 
+        //         // const newdata = new adminappr(item);
+        //         // const savedata = await newdata.save();
+        //         // console.log(`from post method, signup ${savedata}`);
+        //         // res.send(savedata);
+    
+                res.status(200).send({"status":'Data Received and Waiting for Super Admin Approoval'});
 
-                const newdata = new admin(item);
-                const savedata = await newdata.save();
-                // console.log(`from post method, signup ${savedata}`);
-                // res.send(savedata);
-                res.status(200).send({savedata});
-
-            } catch (error) {
-                console.log(`error from post, signup method ${error}`);
-            }
+        //     } catch (error) {
+        //         console.log(`error from post, signup method ${error}`);
+        //     }
 
 
         }
@@ -48,7 +51,7 @@ router.post('/signup', async (req, res) => {
         } 
 
 
-    });
+    // });
 
 
 });

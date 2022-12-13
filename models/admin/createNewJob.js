@@ -16,7 +16,7 @@ const postAJob = new schema({
     Schedule: { type: String, requied: true },
     Language: { type: String, requied: true },
     Contact: { type: String, requied: true },
-    Date: { type: String, requied: true },
+    Date: { type: String },
     ApplyStatus: { type: Number,requied: true  }
    
     

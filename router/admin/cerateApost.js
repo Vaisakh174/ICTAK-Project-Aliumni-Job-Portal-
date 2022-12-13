@@ -181,7 +181,7 @@ router.put('/update', async (req, res) => {
 
     try {
         let id = req.body._id;
-        const DateNow = Date.now();
+      
         let item = { //remove 'data' from below if we not pass data object from frontend
 
             Jobname: req.body.data.Jobname,
@@ -195,8 +195,8 @@ router.put('/update', async (req, res) => {
             Benefits: req.body.data.Benefits,
             Schedule: req.body.data.Schedule,
             Language: req.body.data.Language,
-            Contact: req.body.data.Contact,
-            Date: Date(DateNow).toString(),
+            Contact: req.body.data.Contact
+            
             // ApplyStatus:req.body.data.ApplyStatus
         }
         // console.log("incoming data from update", req.body);
@@ -233,7 +233,7 @@ router.put('/updateapply', async (req, res) => {
         res.send(updatedata);
 
     } catch (error) {
-        console.log(`error from get method ${error}`);
+        console.log(`error from put method ${error}`);
     }
 
 });
