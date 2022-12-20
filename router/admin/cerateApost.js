@@ -30,33 +30,12 @@ function verifytoken(req, res, next) {
 
 
 
-// async function checkDate() {
-
-//     let data = await DATA.find({ Date: { $lt: "2023-11-28T17:29:40.862+00:00" } })
-//     if (data) {
-//         for (let i = 0; i < data.length; i++) {
-//             console.log(`error from check method ${data[i].ApplyStatus}`);
-//             data[i].ApplyStatus = "false"
-//             // console.log(`error from check method ${data}`);
-
-//             await DATA.findByIdAndUpdate(
-//                 { "_id": data[i]._id },
-//                 { $set: data[i] }
-
-//             );
-//         }
-
-//     }
-
-
-// }
-
 //get all list (get) for data
 router.get('/getall', async (req, res) => {
 
     try {
         
-        let list = await DATA.find();
+        let list = await DATA.find().sort({"Date":-1});
 
         // console.log(`from get method ${list}`);
         res.send(list);
@@ -143,7 +122,7 @@ router.post('/postSearch', async (req, res) => {
                 }
             ]
 
-        )
+        ).sort({"Date":-1});
 
         res.send(result);
 

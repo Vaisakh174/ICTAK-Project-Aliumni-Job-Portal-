@@ -29,11 +29,11 @@ function verifytoken(req, res, next) {
 
 
 
-//get all list (get) for data
-router.get('/getApproved',verifytoken, async (req, res) => {
+//get all list (get) for data approved
+router.get('/getAllApproved', async (req, res) => {
 
     try {
-        let list = await approvedPost.find();
+        let list = await approvedPost.find().sort({"Date":-1});;
 
         console.log(`from get method ${list}`);
         res.send(list);
@@ -55,7 +55,7 @@ router.get('/getApproved',verifytoken, async (req, res) => {
 router.post('/posted',verifytoken, async (req, res) => {
     // console.log("hr",req.body.Jobname);
     try {
-        const DateNow = Date.now();
+        
         let item = {
 
            
@@ -83,7 +83,7 @@ router.post('/posted',verifytoken, async (req, res) => {
             Alumni_branch: req.body.Alumni_branch,
             Alumni_Placement: req.body.Alumni_Placement,
             Placed_company: req.body.Placed_company,
-            Date: Date(DateNow).toString()
+            Date: req.body.Date
 
         }
         const newdata = new approvedPost(item);
