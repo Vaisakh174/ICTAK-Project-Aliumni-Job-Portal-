@@ -4,10 +4,11 @@ const approvePost = require("../../models/admin/approvePost.js");
 const approvedPost = require("../../models/admin/approvedpost.js");
 const jwt = require('jsonwebtoken')
 const multer = require('multer');
+var filenameV
 
 //middleware
 function verifytoken(req, res, next) {
-    console.log('headers=', req.headers.authorization);
+    // console.log('headers=', req.headers.authorization);
     if (!req.headers.authorization) {
         return res.status(401).send('Unautherized request');
     }
@@ -16,11 +17,11 @@ function verifytoken(req, res, next) {
         return res.status(401).send('Unautherized request');
     }
     let payload = jwt.verify(token, 'secretkey');
-    console.log("payload=", payload);
+    // console.log("payload=", payload);
     if (!payload) {
         return res.status(401).send('Unautherized request');
     }
-    console.log("payload.subject=", payload.subject);
+    // console.log("payload.subject=", payload.subject);
 
     req.userId = payload.subject;
     next();
@@ -35,7 +36,7 @@ router.get('/getAllApproved', async (req, res) => {
     try {
         let list = await approvedPost.find().sort({"Date":-1});;
 
-        console.log(`from get method ${list}`);
+        console.log(`from get apprd method`);
         res.send(list);
     }
     catch (error) {
@@ -72,7 +73,7 @@ router.post('/posted',verifytoken, async (req, res) => {
             Language: req.body.Language,
             Contact: req.body.Contact,
             CompanyName: req.body.CompanyName,
-
+            filename:req.body.filename,
 
             Alumni_name: req.body.Alumni_name,
             Alumni_phone: req.body.Alumni_phone,
@@ -123,64 +124,64 @@ router.delete('/deleted/:id',verifytoken, async (req, res) => {
 
 
 
-//appvrove section
+// //appvrove section
 
-//add data posting  (through postman)
-router.post('/post', async (req, res) => {
+// //add data posting  (through postman)
+// router.post('/post', async (req, res) => {
 
-    try {
-        const DateNow = Date.now();
-        let item = {
+//     try {
+//         const DateNow = Date.now();
+//         let item = {
 
            
-            JobID: req.body._id,
-            Jobname: req.body.Jobname,
-            Place: req.body.Place,
-            Salary: req.body.Salary,
-            JobType: req.body.JobType,
-            Qualifications: req.body.Qualifications,
-            JobDescription: req.body.JobDescription,
-            Experience: req.body.Experience,
-            Benefits: req.body.Benefits,
-            Schedule: req.body.Schedule,
-            Language: req.body.Language,
-            Contact: req.body.Contact,
-            CompanyName: req.body.CompanyName,
+//             JobID: req.body._id,
+//             Jobname: req.body.Jobname,
+//             Place: req.body.Place,
+//             Salary: req.body.Salary,
+//             JobType: req.body.JobType,
+//             Qualifications: req.body.Qualifications,
+//             JobDescription: req.body.JobDescription,
+//             Experience: req.body.Experience,
+//             Benefits: req.body.Benefits,
+//             Schedule: req.body.Schedule,
+//             Language: req.body.Language,
+//             Contact: req.body.Contact,
+//             CompanyName: req.body.CompanyName,
+       
 
-
-            Alumni_name: req.body.Alumni_name,
-            Alumni_phone: req.body.Alumni_phone,
-            Alumni_email: req.body.Alumni_email,
-            Alumni_qualification: req.body.Alumni_qualification,
-            Alumni_Experience: req.body.Alumni_Experience,
-            Alumni_course: req.body.Alumni_course,
-            Alumni_branch: req.body.Alumni_branch,
-            Alumni_Placement: req.body.Alumni_Placement,
-            Placed_company: req.body.Placed_company,
-            Date: Date(DateNow).toString()
+//             Alumni_name: req.body.Alumni_name,
+//             Alumni_phone: req.body.Alumni_phone,
+//             Alumni_email: req.body.Alumni_email,
+//             Alumni_qualification: req.body.Alumni_qualification,
+//             Alumni_Experience: req.body.Alumni_Experience,
+//             Alumni_course: req.body.Alumni_course,
+//             Alumni_branch: req.body.Alumni_branch,
+//             Alumni_Placement: req.body.Alumni_Placement,
+//             Placed_company: req.body.Placed_company,
+//             Date: Date(DateNow).toString()
 
             
 
-        }
-        const newdata = new approvePost(item);
-        const savedata = await newdata.save();
-        // console.log(`from post method ${savedata}`);
-        res.send(savedata);
+//         }
+//         const newdata = new approvePost(item);
+//         const savedata = await newdata.save();
+//         // console.log(`from post method ${savedata}`);
+//         res.send(savedata);
 
-    } catch (error) {
-        console.log(`error from get method ${error}`);
-    }
+//     } catch (error) {
+//         console.log(`error from get method ${error}`);
+//     }
 
-});
+// });
 
 
 //get all list (get) for data
 router.get('/getall',verifytoken, async (req, res) => {
 
     try {
-        let list = await approvePost.find();
+        let list = await approvePost.find().sort({"Date":-1});;
 
-        console.log(`from get method ${list}`);
+        // console.log(`from get method ${list}`);
         res.send(list);
     }
     catch (error) {
@@ -196,7 +197,7 @@ router.get('/getsingle/:id',verifytoken, async (req, res) => {
     try {
         let id = req.params.id;
         const singledata = await approvePost.findById(id);
-        console.log(`from get with id method ${singledata}`);
+        // console.log(`from get with id method ${singledata}`);
         res.send(singledata)
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -205,9 +206,9 @@ router.get('/getsingle/:id',verifytoken, async (req, res) => {
 });
 
 //apply job
-router.post('/apply',verifytoken, async (req, res) => {
-    console.log("*****", req.body.alumniData);
-    console.log("*****", req.body.postData);
+router.post('/apply', async (req, res) => {
+    // console.log("*****", req.body.alumniData);
+    // console.log("*****", req.body.postData);
     try {
         const DateNow = Date.now();
         let item = {
@@ -227,7 +228,7 @@ router.post('/apply',verifytoken, async (req, res) => {
             Language: req.body.postData.Language,
             Contact: req.body.postData.Contact,
             CompanyName: req.body.postData.CompanyName,
-
+            
 
             Alumni_name: req.body.alumniData.Alumni_name,
             Alumni_phone: req.body.alumniData.Alumni_phone,
@@ -238,12 +239,14 @@ router.post('/apply',verifytoken, async (req, res) => {
             Alumni_branch: req.body.alumniData.Alumni_branch,
             Alumni_Placement: req.body.alumniData.Alumni_Placement,
             Placed_company: req.body.alumniData.Placed_company,
+            filename:filenameV,
             Date: Date(DateNow).toString()
 
         }
         const newdata = new approvePost(item);
         const savedata = await newdata.save();
-        // console.log(`from post method ${savedata}`);
+        console.log(`from apply method ${item.filename}`);
+       
         res.send(savedata);
 
     } catch (error) {
@@ -253,6 +256,7 @@ router.post('/apply',verifytoken, async (req, res) => {
 });
 
 
+
 //file upload
 const storage = multer.diskStorage({
     
@@ -260,23 +264,45 @@ const storage = multer.diskStorage({
         callBack(null, 'Uploaded_Files')
     },
     filename: (req, file, callBack) => {
-        // const DateNow = Date.now();
-        callBack(null, `alumni_resp ${file.originalname} ${Date.now()}.pdf`)
+      
+   
+     
+        callBack(null,`alumni_resp ${file.originalname} ${Date.now()}.pdf` )
     }
 })
 
 const upload = multer({ storage: storage })
 
 router.post('/upload',upload.single('file'), (req, res, next) => {
+
+    filenameV=""
     const file = req.file;
-    console.log("########",file.filename);
    
+    filenameV=file.filename
+    console.log("upld",filenameV);
+    
     if (!file) {
         const error = new Error('No File')
         error.httpStatusCode = 400
         return next(error)
     }
     res.send(file);
+    // console.log("fffff",fileName)
+})
+
+
+
+
+//for file download in angular
+router.get('/download/:filename', (req, res, next) => {
+    console.log('dwnld',req.params.filename)
+    res.download(`./Uploaded_Files/${req.params.filename}`,(err)=>{
+
+        if(err){
+            console.log("download err  ",err)
+            res.send({msg:err});
+        }
+    });
 
 })
 
@@ -303,7 +329,7 @@ router.put('/update',verifytoken, async (req, res) => {
 
     try {
         let id = req.body._id;
-        const DateNow = Date.now();
+
         let item = { //remove 'data' from below if we not pass data object from frontend
 
             
@@ -330,17 +356,17 @@ router.put('/update',verifytoken, async (req, res) => {
             Alumni_course: req.body.data.Alumni_course,
             Alumni_branch: req.body.data.Alumni_branch,
             Alumni_Placement: req.body.data.Alumni_Placement,
-            Placed_company: req.body.data.Placed_company,
-            Date: Date(DateNow).toString()
+            Placed_company: req.body.data.Placed_company
+            
 
         }
-        console.log("incoming data from update", item);
+        // console.log("incoming data from update", item);
 
         let updatedata = await approvePost.findByIdAndUpdate(
             { "_id": id },
             { $set: item }
         );
-        console.log(`from put method old data ${updatedata}`);
+        // console.log(`from put method old data ${updatedata}`);
         res.send(updatedata);
 
     } catch (error) {

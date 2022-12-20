@@ -25,6 +25,7 @@ const approvedJob = new schema({
     Alumni_branch: { type: String, requied: true },
     Alumni_Placement: { type: String, requied: true },
     Placed_company: { type: String, requied: true },
+    filename: { type: String},
     Date: { type: String, requied: true }
 });
 let apDATA = mongoose.model("approvedJobReq", approvedJob);

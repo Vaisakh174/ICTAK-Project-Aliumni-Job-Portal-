@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 
 //middleware
 function verifytoken(req, res, next) {
-    console.log('headers=', req.headers.authorization);
+    // console.log('headers=', req.headers.authorization);
     if (!req.headers.authorization) {
         return res.status(401).send('Unautherized request');
     }
@@ -16,11 +16,11 @@ function verifytoken(req, res, next) {
         return res.status(401).send('Unautherized request');
     }
     let payload = jwt.verify(token, 'secretkey');
-    console.log("payload=", payload);
+    // console.log("payload=", payload);
     if (!payload) {
         return res.status(401).send('Unautherized request');
     }
-    console.log("payload.subject=", payload.subject);
+    // console.log("payload.subject=", payload.subject);
 
     req.userId = payload.subject;
     next();
@@ -37,7 +37,7 @@ router.get('/getall', async (req, res) => {
         
         let list = await DATA.find().sort({"Date":-1});
 
-        // console.log(`from get method ${list}`);
+        console.log(`from getall job method`);
         res.send(list);
     }
     catch (error) {
@@ -54,7 +54,7 @@ router.get('/getsingle/:id', async (req, res) => {
     try {
         let id = req.params.id;
         const singledata = await DATA.findById(id);
-        console.log(`from get with id method ${singledata}`);
+        console.log(`from get with id job method `);
         res.send(singledata)
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -88,7 +88,7 @@ router.post('/post', async (req, res) => {
         }
         const newdata = new DATA(item);
         const savedata = await newdata.save();
-        console.log(`from post method ${item.Date}`);
+        console.log(`from post job method`);
         res.send(savedata);
 
     } catch (error) {
@@ -102,7 +102,7 @@ router.post('/post', async (req, res) => {
 //for search home job data
 router.post('/postSearch', async (req, res) => {
 
-    console.log(`from post search method : ${req.body.textData}`);
+    // console.log(`from post search method : ${req.body.textData}`);
 
     try {
 
@@ -143,7 +143,7 @@ router.delete('/delete/:id', async (req, res) => {
     try {
         let id = req.params.id;
         let deletedata = await DATA.findByIdAndDelete(id);
-        console.log(`from delete method ${deletedata}`);
+        // console.log(`from delete method ${deletedata}`);
         res.send(deletedata);
 
     } catch (error) {
@@ -176,7 +176,7 @@ router.put('/update', async (req, res) => {
             Language: req.body.data.Language,
             Contact: req.body.data.Contact
             
-            // ApplyStatus:req.body.data.ApplyStatus
+           
         }
         // console.log("incoming data from update", req.body);
 
