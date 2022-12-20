@@ -205,7 +205,7 @@ router.get('/getsingle/:id',verifytoken, async (req, res) => {
 });
 
 //apply job
-router.post('/apply',verifytoken, async (req, res) => {
+router.post('/apply', async (req, res) => {
     console.log("*****", req.body.alumniData);
     console.log("*****", req.body.postData);
     try {
