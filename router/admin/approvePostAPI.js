@@ -43,7 +43,7 @@ router.get('/getAllApproved', async (req, res) => {
         console.log(`error from get method ${error}`);
 
     }
-
+ 
 });
 
 
@@ -267,7 +267,7 @@ const storage = multer.diskStorage({
 
 
 
-        callBack(null, `alumni_resp ${file.originalname} ${Date.now()}.pdf`)
+        callBack(null, `alumni_resp_${file.originalname}_${Date.now()}.pdf`)
     }
 })
 
