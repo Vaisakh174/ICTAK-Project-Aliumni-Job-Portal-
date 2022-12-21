@@ -34,7 +34,7 @@ function verifytoken(req, res, next) {
 router.get('/getAllApproved', async (req, res) => {
 
     try {
-        let list = await approvedPost.find().sort({"Date":-1});;
+        let list = await approvedPost.find().sort({ "Date": -1 });;
 
         console.log(`from get apprd method`);
         res.send(list);
@@ -53,13 +53,13 @@ router.get('/getAllApproved', async (req, res) => {
 
 
 //add data when approved (post)
-router.post('/posted',verifytoken, async (req, res) => {
+router.post('/posted', verifytoken, async (req, res) => {
     // console.log("hr",req.body.Jobname);
     try {
-        
+
         let item = {
 
-           
+
             JobID: req.body.JobID,
             Jobname: req.body.Jobname,
             Place: req.body.Place,
@@ -73,7 +73,7 @@ router.post('/posted',verifytoken, async (req, res) => {
             Language: req.body.Language,
             Contact: req.body.Contact,
             CompanyName: req.body.CompanyName,
-            filename:req.body.filename,
+            filename: req.body.filename,
 
             Alumni_name: req.body.Alumni_name,
             Alumni_phone: req.body.Alumni_phone,
@@ -99,7 +99,7 @@ router.post('/posted',verifytoken, async (req, res) => {
 });
 
 // delete data
-router.delete('/deleted/:id',verifytoken, async (req, res) => {
+router.delete('/deleted/:id', verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -133,7 +133,7 @@ router.delete('/deleted/:id',verifytoken, async (req, res) => {
 //         const DateNow = Date.now();
 //         let item = {
 
-           
+
 //             JobID: req.body._id,
 //             Jobname: req.body.Jobname,
 //             Place: req.body.Place,
@@ -147,7 +147,7 @@ router.delete('/deleted/:id',verifytoken, async (req, res) => {
 //             Language: req.body.Language,
 //             Contact: req.body.Contact,
 //             CompanyName: req.body.CompanyName,
-       
+
 
 //             Alumni_name: req.body.Alumni_name,
 //             Alumni_phone: req.body.Alumni_phone,
@@ -160,7 +160,7 @@ router.delete('/deleted/:id',verifytoken, async (req, res) => {
 //             Placed_company: req.body.Placed_company,
 //             Date: Date(DateNow).toString()
 
-            
+
 
 //         }
 //         const newdata = new approvePost(item);
@@ -176,10 +176,10 @@ router.delete('/deleted/:id',verifytoken, async (req, res) => {
 
 
 //get all list (get) for data
-router.get('/getall',verifytoken, async (req, res) => {
+router.get('/getall', verifytoken, async (req, res) => {
 
     try {
-        let list = await approvePost.find().sort({"Date":-1});;
+        let list = await approvePost.find().sort({ "Date": -1 });;
 
         // console.log(`from get method ${list}`);
         res.send(list);
@@ -192,7 +192,7 @@ router.get('/getall',verifytoken, async (req, res) => {
 });
 
 // fetch single data (get)
-router.get('/getsingle/:id',verifytoken, async (req, res) => {
+router.get('/getsingle/:id', verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -213,7 +213,7 @@ router.post('/apply', async (req, res) => {
         const DateNow = Date.now();
         let item = {
 
-      
+
 
             JobID: req.body.postData._id,
             Jobname: req.body.postData.Jobname,
@@ -228,7 +228,7 @@ router.post('/apply', async (req, res) => {
             Language: req.body.postData.Language,
             Contact: req.body.postData.Contact,
             CompanyName: req.body.postData.CompanyName,
-            
+
 
             Alumni_name: req.body.alumniData.Alumni_name,
             Alumni_phone: req.body.alumniData.Alumni_phone,
@@ -239,14 +239,14 @@ router.post('/apply', async (req, res) => {
             Alumni_branch: req.body.alumniData.Alumni_branch,
             Alumni_Placement: req.body.alumniData.Alumni_Placement,
             Placed_company: req.body.alumniData.Placed_company,
-            filename:filenameV,
+            filename: filenameV,
             Date: Date(DateNow).toString()
 
         }
         const newdata = new approvePost(item);
         const savedata = await newdata.save();
         console.log(`from apply method ${item.filename}`);
-       
+
         res.send(savedata);
 
     } catch (error) {
@@ -259,28 +259,28 @@ router.post('/apply', async (req, res) => {
 
 //file upload
 const storage = multer.diskStorage({
-    
+
     destination: (req, file, callBack) => {
         callBack(null, 'Uploaded_Files')
     },
     filename: (req, file, callBack) => {
-      
-   
-     
-        callBack(null,`alumni_resp ${file.originalname} ${Date.now()}.pdf` )
+
+
+
+        callBack(null, `alumni_resp ${file.originalname} ${Date.now()}.pdf`)
     }
 })
 
 const upload = multer({ storage: storage })
 
-router.post('/upload',upload.single('file'), (req, res, next) => {
+router.post('/upload', upload.single('file'), (req, res, next) => {
 
-    filenameV=""
+    filenameV = ""
     const file = req.file;
-   
-    filenameV=file.filename
-    console.log("upld",filenameV);
-    
+
+    filenameV = file.filename
+    console.log("upld", filenameV);
+
     if (!file) {
         const error = new Error('No File')
         error.httpStatusCode = 400
@@ -295,12 +295,12 @@ router.post('/upload',upload.single('file'), (req, res, next) => {
 
 //for file download in angular
 router.get('/download/:filename', (req, res, next) => {
-    console.log('dwnld',req.params.filename)
-    res.download(`./Uploaded_Files/${req.params.filename}`,(err)=>{
+    console.log('dwnld', req.params.filename)
+    res.download(`./Uploaded_Files/${req.params.filename}`, (err) => {
 
-        if(err){
-            console.log("download err  ",err)
-            res.send({msg:err});
+        if (err) {
+            console.log("download err  ", err)
+            res.send({ msg: err });
         }
     });
 
@@ -310,7 +310,7 @@ router.get('/download/:filename', (req, res, next) => {
 
 
 // delete data
-router.delete('/delete/:id',verifytoken, async (req, res) => {
+router.delete('/delete/:id', verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -325,14 +325,14 @@ router.delete('/delete/:id',verifytoken, async (req, res) => {
 });
 
 // update data
-router.put('/update',verifytoken, async (req, res) => {
+router.put('/update', verifytoken, async (req, res) => {
 
     try {
         let id = req.body._id;
 
         let item = { //remove 'data' from below if we not pass data object from frontend
 
-            
+
             JobID: req.body.data.JobID,
             Jobname: req.body.data.Jobname,
             Place: req.body.data.Place,
@@ -357,7 +357,7 @@ router.put('/update',verifytoken, async (req, res) => {
             Alumni_branch: req.body.data.Alumni_branch,
             Alumni_Placement: req.body.data.Alumni_Placement,
             Placed_company: req.body.data.Placed_company
-            
+
 
         }
         // console.log("incoming data from update", item);
