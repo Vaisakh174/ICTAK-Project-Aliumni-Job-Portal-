@@ -291,7 +291,7 @@ router.post('/upload', upload.single('file'), (req, res, next) => {
         // console.log("fffff",fileName)
         
     } catch (error) {
-        console.log("err file upload ");
+        console.log("Err 123 file upload ");
         console.log(error);
     }
    
