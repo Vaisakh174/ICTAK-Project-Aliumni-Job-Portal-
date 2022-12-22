@@ -279,7 +279,7 @@ const storage = multer.diskStorage({
 
 
 
-        callBack(null, `alumni_resp_${file.fieldname}_${Date.now()}.pdf`)
+        callBack(null, `alumni_resp_${file.filename}_${Date.now()}.pdf`)
     }
 })
 
