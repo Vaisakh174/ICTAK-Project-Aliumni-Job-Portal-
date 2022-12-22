@@ -261,7 +261,7 @@ router.post('/apply', async (req, res) => {
 const storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
-        callBack(null,__dirname+'/public/Uploaded_Files') //host use
+        callBack(null,__dirname+'/public/images') //host use
         // callBack(null,'Uploaded_Files') //local use
     },
     filename: (req, file, callBack) => {
