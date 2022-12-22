@@ -265,7 +265,7 @@ function checkdir() {
 
         }
     });
-    next();
+    // next();
 }
 
 //file upload
