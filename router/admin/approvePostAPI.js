@@ -261,7 +261,8 @@ router.post('/apply', async (req, res) => {
 const storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
-        callBack(null, 'Uploaded_Files')
+        callBack(null,__dirname+'/public/Uploaded_Files') //host use
+        // callBack(null,'Uploaded_Files') //local use
     },
     filename: (req, file, callBack) => {
 
@@ -296,7 +297,7 @@ router.post('/upload', upload.single('file'), (req, res, next) => {
 //for file download in angular
 router.get('/download/:filename', (req, res, next) => {
     console.log('dwnld', req.params.filename)
-    res.download(`./Uploaded_Files/${req.params.filename}`, (err) => {
+    res.download(`${__dirname}/public/Uploaded_Files/${req.params.filename}`, (err) => {
 
         if (err) {
             console.log("download err  ", err)
