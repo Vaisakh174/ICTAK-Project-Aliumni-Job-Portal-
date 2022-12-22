@@ -4,6 +4,7 @@ const approvePost = require("../../models/admin/approvePost.js");
 const approvedPost = require("../../models/admin/approvedpost.js");
 const jwt = require('jsonwebtoken')
 const multer = require('multer');
+const fs = require("fs");
 var filenameV
 
 //middleware
@@ -43,7 +44,7 @@ router.get('/getAllApproved', async (req, res) => {
         console.log(`error from get method ${error}`);
 
     }
- 
+
 });
 
 
@@ -255,13 +256,23 @@ router.post('/apply', async (req, res) => {
 
 });
 
+function checkdir() {
+    fs.exists(__dirname + './Uploaded_Files', exists => {
+        console.log(exists ? "The directory already exists"
+            : "Not found!");
+        if (!exists) {
+            fs.mkdirSync(__dirname + '/Uploaded_Files');
 
+        }
+    });
+    next();
+}
 
 //file upload
 const storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
-        callBack(null,__dirname+'/public') //host use
+        callBack(null, __dirname + '/public') //host use
         // callBack(null,'Uploaded_Files') //local use
     },
     filename: (req, file, callBack) => {
@@ -274,14 +285,15 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-router.post('/upload', upload.single('file'), (req, res, next) => {
+router.post('/upload', checkdir, upload.single('file'), (req, res, next) => {
 
     filenameV = ""
-    try { const file = req.file;
+    try {
+        const file = req.file;
 
         filenameV = file.filename
         console.log("upld", filenameV);
-    
+
         if (!file) {
             const error = new Error('No File')
             error.httpStatusCode = 400
@@ -289,12 +301,12 @@ router.post('/upload', upload.single('file'), (req, res, next) => {
         }
         res.send(file);
         // console.log("fffff",fileName)
-        
+
     } catch (error) {
         console.log("Err 123 file upload ");
         console.log(error);
     }
-   
+
 })
 
 
