@@ -268,7 +268,7 @@ const storage = multer.diskStorage({
 
 
 
-        callBack(null, `alumni_resp_${file.originalname}_${Date.now()}.pdf`)
+        callBack(null, `alumni_resp_${file.fieldname}_${Date.now()}.pdf`)
     }
 })
 
@@ -277,18 +277,24 @@ const upload = multer({ storage: storage })
 router.post('/upload', upload.single('file'), (req, res, next) => {
 
     filenameV = ""
-    const file = req.file;
+    try { const file = req.file;
 
-    filenameV = file.filename
-    console.log("upld", filenameV);
-
-    if (!file) {
-        const error = new Error('No File')
-        error.httpStatusCode = 400
-        return next(error)
+        filenameV = file.filename
+        console.log("upld", filenameV);
+    
+        if (!file) {
+            const error = new Error('No File')
+            error.httpStatusCode = 400
+            return next(error)
+        }
+        res.send(file);
+        // console.log("fffff",fileName)
+        
+    } catch (error) {
+        console.log("err file upload ");
+        console.log(error);
     }
-    res.send(file);
-    // console.log("fffff",fileName)
+   
 })
 
 
