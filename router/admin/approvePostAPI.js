@@ -257,11 +257,11 @@ router.post('/apply', async (req, res) => {
 });
 
 function checkdir() {
-    fs.exists('../../public', exists => {
+    fs.exists('../../public/Uploaded_Files', exists => {
         console.log(exists ? "The directory already exists"
             : "Not found!");
         if (!exists) {
-            fs.mkdirSync('../../public');
+            fs.mkdirSync('../../public/Uploaded_Files');
 
         }
     });
@@ -272,7 +272,7 @@ function checkdir() {
 const storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
-        callBack(null,'../../public') //host use
+        callBack(null,'../../public/Uploaded_Files') //host use
         // callBack(null,'Uploaded_Files') //local use
     },
     filename: (req, file, callBack) => {
@@ -315,7 +315,7 @@ router.post('/upload', checkdir, upload.single('file'), (req, res, next) => {
 //for file download in angular
 router.get('/download/:filename', (req, res, next) => {
     console.log('dwnld', req.params.filename)
-    res.download(`../../public/${req.params.filename}`, (err) => {
+    res.download(`../../public/Uploaded_Files/${req.params.filename}`, (err) => {
 
         if (err) {
             console.log("download err  ", err)
