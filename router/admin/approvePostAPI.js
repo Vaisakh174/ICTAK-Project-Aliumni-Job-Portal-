@@ -29,7 +29,29 @@ function verifytoken(req, res, next) {
 
 }
 
-
+function convertTimeToIST(gmtTimeString) {
+    // Parse the GMT time string
+    const gmtTime = new Date(gmtTimeString);
+  
+    // Get the time offset for the IST time zone
+    const timeOffset = gmtTime.getTimezoneOffset();
+  
+    // Calculate the IST time by subtracting the time offset from the GMT time
+    const istTime = new Date(gmtTime - timeOffset * 60 * 1000);
+  
+    // Format the IST time as a string in the 12-hour clock format with the date included
+    const formattedTime = istTime.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    });
+  
+    // Return the formatted IST time with the "IST" string appended
+    return `${formattedTime} IST`;
+  }
 
 //get all list (get) for data approved
 router.get('/getAllApproved', async (req, res) => {
@@ -211,7 +233,7 @@ router.post('/apply', async (req, res) => {
     // console.log("*****", req.body.alumniData);
     // console.log("*****", req.body.postData);
     try {
-        const DateNow = Date.now();
+        // const DateNow = Date.now();
         let item = {
 
 
@@ -241,7 +263,8 @@ router.post('/apply', async (req, res) => {
             Alumni_Placement: req.body.alumniData.Alumni_Placement,
             Placed_company: req.body.alumniData.Placed_company,
             filename: filenameV,
-            Date: Date(DateNow).toString()
+            // Date: Date(DateNow).toString()
+            Date: convertTimeToIST(new Date(Date.now()))
 
         }
         const newdata = new approvePost(item);
