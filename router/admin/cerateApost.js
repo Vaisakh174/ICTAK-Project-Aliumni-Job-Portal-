@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const DATA = require("../../models/admin/createNewJob.js");
-
+const GMT00 = require("../../convertGMT00toIST.js");
 const jwt = require('jsonwebtoken')
 
 
@@ -28,29 +28,9 @@ function verifytoken(req, res, next) {
 }
 
 
-const getCurrentTimeInIST = () => {
-    // Get the current time in GMT
-    const gmtTime = new Date();
-  
-    // Get the time offset for the IST time zone
-    const timeOffset = gmtTime.getTimezoneOffset();
-  
-    // Calculate the IST time by subtracting the time offset from the GMT time
-    const istTime = new Date(gmtTime - timeOffset * 60 * 1000);
-  
-    // Format the IST time as a string in the 12-hour clock format
-    const formattedTime = istTime.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    });
-  
-    // Return the formatted IST time with the "IST" string appended
-    return `${formattedTime} IST`;
-  };
+
+
+
 
 
 //get all list (get) for data
@@ -107,7 +87,7 @@ router.post('/post', async (req, res) => {
             Language: req.body.Language,
             Contact: req.body.Contact,
             // Date: Date(DateNow).toString(),
-            Date: getCurrentTimeInIST(),
+            Date: GMT00.getCurrentTimeInIST(),
             ApplyStatus:1
         }
         const newdata = new DATA(item);
