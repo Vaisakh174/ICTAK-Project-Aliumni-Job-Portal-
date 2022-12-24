@@ -42,14 +42,15 @@ const getCurrentTimeInIST = () => {
     console.log('istime')
     console.log(istTime)
     // Format the IST time as a string in the 12-hour clock format
-    const formattedTime = istTime.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    });
+    const formattedTime =  Date(istTime)
+    //     const formattedTime = istTime.toLocaleString('en-US', {
+    //   year: 'numeric',
+    //   month: 'short',
+    //   day: 'numeric',
+    //   hour: 'numeric',
+    //   minute: 'numeric',
+    //   hour12: true
+    // });
     console.log('formatted time')
     console.log(formattedTime)
     // Return the formatted IST time with the "IST" string appended
