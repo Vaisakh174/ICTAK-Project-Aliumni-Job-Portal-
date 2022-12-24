@@ -2,7 +2,7 @@ const express = require("express");
 const app = new express();
 const cors = require("cors");//communication
 const logger = require("morgan");//to view api call on terminal
-
+const GMT00 = require("./convertGMT00toIST.js");
 
 // to pass data from frontend to backend.  use => while starting the app, use is executed
 app.use(express.json());//json pair
@@ -38,6 +38,5 @@ app.get('/*', function (req, res) {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`........port is now connected at ${port} ........`);
-    const DateNow = Date.now();
-    console.log( Date(DateNow).toString() )
+    GMT00.getCurrentTimeInIST();
 });
