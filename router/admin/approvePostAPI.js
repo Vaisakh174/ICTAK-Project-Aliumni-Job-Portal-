@@ -37,7 +37,7 @@ const getCurrentTimeInIST = () => {
     const timeOffset = gmtTime.getTimezoneOffset();
   
     // Calculate the IST time by subtracting the time offset from the GMT time
-    const istTime = new Date(gmtTime - timeOffset * 60 * 1000);
+    const istTime = new Date(gmtTime + timeOffset * 60 * 1000);
   
     // Format the IST time as a string in the 12-hour clock format
     const formattedTime = istTime.toLocaleString('en-US', {
