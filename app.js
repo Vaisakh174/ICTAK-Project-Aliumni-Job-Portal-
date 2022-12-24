@@ -38,5 +38,5 @@ app.get('/*', function (req, res) {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`........port is now connected at ${port} ........`);
-    GMT00.getCurrentTimeInIST();
+   console.log( GMT00.getCurrentTimeInIST());
 });
