@@ -29,9 +29,9 @@ function verifytoken(req, res, next) {
 
 }
 
-function convertTimeToIST(gmtTimeString) {
-    // Parse the GMT time string
-    const gmtTime = new Date(gmtTimeString);
+const getCurrentTimeInIST = () => {
+    // Get the current time in GMT
+    const gmtTime = new Date();
   
     // Get the time offset for the IST time zone
     const timeOffset = gmtTime.getTimezoneOffset();
@@ -39,7 +39,7 @@ function convertTimeToIST(gmtTimeString) {
     // Calculate the IST time by subtracting the time offset from the GMT time
     const istTime = new Date(gmtTime - timeOffset * 60 * 1000);
   
-    // Format the IST time as a string in the 12-hour clock format with the date included
+    // Format the IST time as a string in the 12-hour clock format
     const formattedTime = istTime.toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -51,7 +51,7 @@ function convertTimeToIST(gmtTimeString) {
   
     // Return the formatted IST time with the "IST" string appended
     return `${formattedTime} IST`;
-  }
+  };
 
 //get all list (get) for data approved
 router.get('/getAllApproved', async (req, res) => {
@@ -181,7 +181,7 @@ router.delete('/deleted/:id', verifytoken, async (req, res) => {
 //             Alumni_branch: req.body.Alumni_branch,
 //             Alumni_Placement: req.body.Alumni_Placement,
 //             Placed_company: req.body.Placed_company,
-//             Date: Date(DateNow).toString()
+//             Date: getCurrentTimeInIST()
 
 
 
@@ -202,7 +202,7 @@ router.delete('/deleted/:id', verifytoken, async (req, res) => {
 router.get('/getall', verifytoken, async (req, res) => {
 
     try {
-        let list = await approvePost.find().sort({ "Date": -1 });;
+        let list = await approvePost.find().sort({ "Date": -1 });
 
         // console.log(`from get method ${list}`);
         res.send(list);
@@ -264,7 +264,7 @@ router.post('/apply', async (req, res) => {
             Placed_company: req.body.alumniData.Placed_company,
             filename: filenameV,
             // Date: Date(DateNow).toString()
-            Date: convertTimeToIST(new Date(Date.now()))
+            Date: getCurrentTimeInIST()
 
         }
         const newdata = new approvePost(item);

@@ -4,29 +4,29 @@ const jwt = require('jsonwebtoken')
 const admin = require("../../models/admin/adminUsers.js");
 
 
-function convertTimeToIST(gmtTimeString) {
-    // Parse the GMT time string
-    const gmtTime = new Date(gmtTimeString);
-
+const getCurrentTimeInIST = () => {
+    // Get the current time in GMT
+    const gmtTime = new Date();
+  
     // Get the time offset for the IST time zone
     const timeOffset = gmtTime.getTimezoneOffset();
-
+  
     // Calculate the IST time by subtracting the time offset from the GMT time
     const istTime = new Date(gmtTime - timeOffset * 60 * 1000);
-
-    // Format the IST time as a string in the 12-hour clock format with the date included
+  
+    // Format the IST time as a string in the 12-hour clock format
     const formattedTime = istTime.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
     });
-
+  
     // Return the formatted IST time with the "IST" string appended
     return `${formattedTime} IST`;
-}
+  };
 
 
 
@@ -40,8 +40,7 @@ router.post('/signup', async (req, res) => {
         email: req.body.email,
         password: req.body.password,
         // Date: Date(DateNow).toString()
-        Date: convertTimeToIST(new Date(Date.now()))
-
+        Date: getCurrentTimeInIST()
     }
 
 
