@@ -24,6 +24,12 @@ const getCurrentTimeInIST = () => {
     // console.log(formattedTime)
     // Return the formatted IST time with the "IST" string appended
     return `${formattedTime} IST`;
+
+// // for local system
+//     const DateNow = Date.now();
+//     return Date(DateNow).toString()
+
+
   };
 
   module.exports = {getCurrentTimeInIST}

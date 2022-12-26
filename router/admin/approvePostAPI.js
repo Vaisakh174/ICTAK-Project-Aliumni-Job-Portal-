@@ -3,10 +3,9 @@ const router = express.Router();
 const approvePost = require("../../models/admin/approvePost.js");
 const approvedPost = require("../../models/admin/approvedpost.js");
 const jwt = require('jsonwebtoken')
-const multer = require('multer');
-const fs = require("fs");
 const GMT00 = require("../../convertGMT00toIST.js");
-var filenameV
+const multerData = require("./fileUploadToLocaly.js");
+var filenameV;
 
 //middleware
 function verifytoken(req, res, next) {
@@ -209,125 +208,97 @@ router.get('/getsingle/:id', verifytoken, async (req, res) => {
 
 });
 
-//apply job
-router.post('/apply', async (req, res) => {
-    // console.log("*****", req.body.alumniData);
-    // console.log("*****", req.body.postData);
-    try {
-        // const DateNow = Date.now();
-        let item = {
 
 
-
-            JobID: req.body.postData._id,
-            Jobname: req.body.postData.Jobname,
-            Place: req.body.postData.Place,
-            Salary: req.body.postData.Salary,
-            JobType: req.body.postData.JobType,
-            Qualifications: req.body.postData.Qualifications,
-            JobDescription: req.body.postData.JobDescription,
-            Experience: req.body.postData.Experience,
-            Benefits: req.body.postData.Benefits,
-            Schedule: req.body.postData.Schedule,
-            Language: req.body.postData.Language,
-            Contact: req.body.postData.Contact,
-            CompanyName: req.body.postData.CompanyName,
-
-
-            Alumni_name: req.body.alumniData.Alumni_name,
-            Alumni_phone: req.body.alumniData.Alumni_phone,
-            Alumni_email: req.body.alumniData.Alumni_email,
-            Alumni_qualification: req.body.alumniData.Alumni_qualification,
-            Alumni_Experience: req.body.alumniData.Alumni_Experience,
-            Alumni_course: req.body.alumniData.Alumni_course,
-            Alumni_branch: req.body.alumniData.Alumni_branch,
-            Alumni_Placement: req.body.alumniData.Alumni_Placement,
-            Placed_company: req.body.alumniData.Placed_company,
-            filename: filenameV,
-            // Date: Date(DateNow).toString()
-            Date: GMT00.getCurrentTimeInIST()
-
-        }
-        const newdata = new approvePost(item);
-        const savedata = await newdata.save();
-        console.log(`from apply method ${item.filename}`);
-
-        res.send(savedata);
-
-    } catch (error) {
-        console.log(`error from get method ${error}`);
-    }
-
-});
-
-function checkdir() {
-    fs.exists('../../public/Uploaded_Files', exists => {
-        console.log(exists ? "The directory already exists"
-            : "Not found!");
-        if (!exists) {
-            fs.mkdirSync('../../public/Uploaded_Files');
-
-        }
-    });
-    // next();
-}
-
-//file upload
-const storage = multer.diskStorage({
-
-    destination: (req, file, callBack) => {
-        callBack(null,'../../public/Uploaded_Files') //host use
-        // callBack(null,'Uploaded_Files') //local use
-    },
-    filename: (req, file, callBack) => {
-
-
-
-        callBack(null, `alumni_resp_${file.filename}_${Date.now()}.pdf`)
-    }
-})
-
-const upload = multer({ storage: storage })
-
-router.post('/upload', checkdir, upload.single('file'), (req, res, next) => {
-
-    filenameV = ""
-    try {
-        const file = req.file;
-
-        filenameV = file.filename
-        console.log("upld", filenameV);
-
-        if (!file) {
-            const error = new Error('No File')
-            error.httpStatusCode = 400
-            return next(error)
-        }
-        res.send(file);
-        // console.log("fffff",fileName)
-
-    } catch (error) {
-        console.log("Err 123 file upload ");
-        console.log(error);
-    }
-
-})
+// for local upload 
+// router.post('/upload', multerData.upload.single('file'), async (req, res,) => {
 
 
 
 
-//for file download in angular
-router.get('/download/:filename', (req, res, next) => {
-    console.log('dwnld', req.params.filename)
-    res.download(`../../public/Uploaded_Files/${req.params.filename}`, (err) => {
 
-        if (err) {
-            console.log("download err  ", err)
-            res.send({ msg: err });
-        }
-    });
+//     filenameV = ""
+//     try {
+//         const file = req.file;
 
-})
+//         filenameV = file.filename
+//         console.log("upld file: ", filenameV);
+
+//         let postData=JSON.parse(req.body.postData);
+//         let alumniData=JSON.parse(req.body.alumniData);
+        
+//         if (!file) {
+           
+//             res.send({ "status": "Upload Error" });
+     
+//         }
+//         else {
+
+//             let  item = {
+
+//                 JobID:postData._id,
+//                 Jobname:postData.Jobname,
+//                 Place:postData.Place,
+//                 Salary:postData.Salary,
+//                 JobType:postData.JobType,
+//                 Qualifications:postData.Qualifications,
+//                 JobDescription:postData.JobDescription,
+//                 Experience:postData.Experience,
+//                 Benefits:postData.Benefits,
+//                 Schedule:postData.Schedule,
+//                 Language:postData.Language,
+//                 Contact:postData.Contact,
+//                 CompanyName:postData.CompanyName,
+    
+    
+//                 Alumni_name:alumniData.Alumni_name,
+//                 Alumni_phone:alumniData.Alumni_phone,
+//                 Alumni_email:alumniData.Alumni_email,
+//                 Alumni_qualification:alumniData.Alumni_qualification,
+//                 Alumni_Experience:alumniData.Alumni_Experience,
+//                 Alumni_course:alumniData.Alumni_course,
+//                 Alumni_branch:alumniData.Alumni_branch,
+//                 Alumni_Placement:alumniData.Alumni_Placement,
+//                 Placed_company:alumniData.Placed_company,
+//                 filename:  req.file.filename,
+//                 // Date: Date(DateNow).toString()
+//                 Date: GMT00.getCurrentTimeInIST()
+    
+//             }
+
+//             const newdata = new approvePost(item);
+//             const savedata = await newdata.save();
+//             console.log('from apply method item: ', item);
+//             // res.send(savedata);
+//             res.send({ "status": "Upload Success" });
+//             // console.log("fffff",fileName)
+
+//         }
+//     } catch (error) {
+//         console.log("Err 123 file upload ");
+//         console.log(error);
+//     }
+
+// })
+
+
+
+
+// //for local file download in angular
+// router.get('/download/:filename', (req, res, next) => {
+//     console.log('dwnld', req.params.filename)
+//     res.download(`${__dirname}../../../Uploaded_Files/${req.params.filename}`, (err) => {
+
+//         if (err) {
+//             console.log("download err  ", err)
+//             res.send({ msg: err });
+//         }
+//     });
+
+// })
+
+
+
 
 
 

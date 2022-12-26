@@ -23,6 +23,9 @@ router.use("/employer", employer);
 const faculty = require("./faculty.js");
 router.use("/faculty", faculty);
 
+const upload = require("./admin/uploadToGridFS.js");
+router.use("/upload", upload);
+
 
 
 module.exports = router;
