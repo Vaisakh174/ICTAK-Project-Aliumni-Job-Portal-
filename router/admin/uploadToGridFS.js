@@ -170,8 +170,9 @@ router.get('/:filename', async (req, res) => {
             let Filename=req.params.filename;
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', `inline; filename="${Filename}"`);
+            
             gfg.openDownloadStreamByName(Filename).pipe(res);
-            console.log('File found, name1: ', files[0].filename);
+            console.log('File found, name1: ', files[0]);
         });
 });
 
