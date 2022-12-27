@@ -167,8 +167,10 @@ router.get('/:filename', async (req, res) => {
                 console.log('No file found line no: 167');
                 return res.status(404).send({ err: "No such file exist" });
             }
+            let Filename=req.params.filename;
             res.setHeader('Content-Type', 'application/pdf');
-            gfg.openDownloadStreamByName(req.params.filename).pipe(res);
+            res.setHeader('Content-Disposition', `inline; filename="${Filename}"`);
+            gfg.openDownloadStreamByName(Filename).pipe(res);
             console.log('File found, name1: ', files[0].filename);
         });
 });
