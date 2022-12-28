@@ -48,44 +48,6 @@ const upload = multer({ storage });
 
 
 
-// router.get('/',(req,res) => {
-
-//    // res.render("../views/upload", {titleHead : "Lets Upload Files"} );
-
-//     if(!gfg)
-//     {
-//         res.send("Error occured to connect to DB")
-//         process.exit(0);
-//     }
-//     gfg.find().toArray((err,files) => {
-//         if(!files || files.length === 0 )
-//         {
-//             res.render('../views/upload.ejs', {files : false})
-//         }
-//         else
-//         {
-//             const checkFile = files
-//                 .map(file => {
-//                 if(file.contentType === 'image/png' || file.contentType === "image/jpeg" )
-//                 {
-//                     file.isImage = true
-//                 }
-//                 else
-//                 {
-//                     file.isImage = false
-//                 }
-//                 return file
-//                 } )
-
-
-//             return res.render('../views/upload.ejs ', {
-//                 files : checkFile,
-//                  titleHead : "Lets Upload Files"
-//               } )
-//         }
-//     } )
-
-// } );
 
 
 router.post('/', upload.single('file'), async (req, res) => {
@@ -101,7 +63,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 
         if (!file) {
 
-            res.send({ "statuss": "Upload Error" });
+            res.send({ "status": "Upload Error" });
 
         }
         else {
@@ -141,7 +103,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             const savedata = await newdata.save();
             console.log('from apply method saved data.jobname: ', savedata.Jobname);
 
-            res.send({ "statuss": "Upload Success" });
+            res.send({ "status": "Upload Success" });
 
 
         }
@@ -150,9 +112,6 @@ router.post('/', upload.single('file'), async (req, res) => {
         console.log(error);
 
     }
-
-
-
 
 });
 
@@ -164,7 +123,7 @@ router.get('/:filename', async (req, res) => {
     await gfg.find({ filename: req.params.filename })
         .toArray((err, files) => {
             if (!files || files.length === 0) {
-                console.log('No file found line no: 167');
+                console.log('No file found ');
                 return res.status(404).send({ err: "No such file exist" });
             }
             let Filename = req.params.filename;
@@ -177,15 +136,30 @@ router.get('/:filename', async (req, res) => {
 });
 
 
-router.post('/del', (req, res) => {
-    gfg.delete(mongoose.Types.ObjectId(req.body.filename), (err, resp) => {
-        if (err) {
-            res.status(404).send({status: err.message})
+router.post('/del', async (req, res) => {
+    console.log(' req.body', req.body)
+    await gfg.find({ filename: req.body.filename }).toArray((err, data) => {
+        console.log('finded :  ', data)
+
+        if (data.length > 0) {
+
+            gfg.delete(data[0]._id, (err) => {
+                if (err) {
+                    console.log('del err', err)
+                    res.status(404).send({ status: err.message })
+                }
+                else {
+                    res.status(200).send({ status: "File Deleted" })
+                }
+            })
+
+        } else {
+            res.status(404).send({ status: "Incorrect File Name" })
+
         }
-        else {
-            res.status(200).send({status:"File Deleted"})
-        }
+
     })
+
 })
 
 module.exports = router;
