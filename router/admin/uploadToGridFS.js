@@ -101,7 +101,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 
         if (!file) {
 
-            res.send({ "status": "Upload Error" });
+            res.send({ "statuss": "Upload Error" });
 
         }
         else {
@@ -141,7 +141,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             const savedata = await newdata.save();
             console.log('from apply method saved data.jobname: ', savedata.Jobname);
 
-            res.send({ "status": "Upload Success" });
+            res.send({ "statuss": "Upload Success" });
 
 
         }
