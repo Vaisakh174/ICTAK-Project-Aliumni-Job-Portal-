@@ -167,10 +167,10 @@ router.get('/:filename', async (req, res) => {
                 console.log('No file found line no: 167');
                 return res.status(404).send({ err: "No such file exist" });
             }
-            let Filename=req.params.filename;
+            let Filename = req.params.filename;
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', `inline; filename="${Filename}"`);
-            
+
             gfg.openDownloadStreamByName(Filename).pipe(res);
             console.log('File found, name1: ', files[0]);
         });
@@ -178,14 +178,12 @@ router.get('/:filename', async (req, res) => {
 
 
 router.post('/del', (req, res) => {
-    gfg.delete(mongoose.Types.ObjectId(req.body.filename), (err, res) => {
+    gfg.delete(mongoose.Types.ObjectId(req.body.filename), (err, resp) => {
         if (err) {
-            res.status(404).json({
-                err: err.message
-            })
+            res.status(404).send({status: err.message})
         }
         else {
-            res.status(200).send("File Deleted")
+            res.status(200).send({status:"File Deleted"})
         }
     })
 })
