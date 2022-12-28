@@ -177,7 +177,7 @@ router.get('/:filename', async (req, res) => {
 });
 
 
-router.post('/del', (err, res) => {
+router.post('/del', (req, res) => {
     gfg.delete(mongoose.Types.ObjectId(req.body.filename), (err, res) => {
         if (err) {
             res.status(404).json({
