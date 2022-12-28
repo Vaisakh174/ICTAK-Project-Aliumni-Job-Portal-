@@ -154,6 +154,7 @@ router.post('/del', async (req, res) => {
             })
 
         } else {
+            console.log('filename err')
             res.status(404).send({ status: "Incorrect File Name" })
 
         }
