@@ -136,11 +136,11 @@ router.get('/:filename', async (req, res) => {
 });
 
 
-router.post('/del', async (req, res) => {
-    console.log(' req.body', req.body)
+router.delete('/del/:filename', async (req, res) => {
+    console.log(' req.params', req.params.filename)
 
     try {
-        await gfg.find({ filename: req.body.filename }).toArray((err, data) => {
+        await gfg.find({ filename: req.params.filename }).toArray((err, data) => {
             console.log('finded :  ', data)
 
             if (data.length > 0) {
