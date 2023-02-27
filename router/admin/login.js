@@ -5,66 +5,60 @@ const admin = require("../../models/admin/adminUsers.js");
 const GMT00 = require("../../convertGMT00toIST.js");
 
 
-
-
+const bcrypt = require('bcrypt');
 
 
 
 //signup
 // add data (post) for users
 router.post('/signup', async (req, res) => {
-    // const DateNow = Date.now();
-    let item = {
+    try {
+        let item = {
 
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        // Date: Date(DateNow).toString()
-        Date: GMT00.getCurrentTimeInIST()
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            // Date: Date(DateNow).toString()
+            Date: GMT00.getCurrentTimeInIST()
+        }
+
+
+        let foundResults = await admin.findOne({ email: item.email })
+
+        // , async (err, foundResults) => {
+
+        // console.log("data from signup body", foundResults)
+
+        if (foundResults == null) {
+            console.log("no matching email found");
+
+            // // Hash the password
+            // const salt = await bcrypt.genSalt(10);
+            // const hashedPassword = await bcrypt.hash(item.password, salt);
+            // item.password = hashedPassword;
+
+            // const newdata = new admin(item);
+            // const savedata = await newdata.save();
+            // console.log(`from post method, signup ${savedata}`);
+           
+
+            res.status(200).send({ "status": 'Data Received and Waiting for Super Admin Approoval' });
+
+
+
+        }
+        else {
+            console.log("matching email found");
+            res.status(401).send("Email already registered");
+
+
+        }
+    } catch (error) {
+        console.log(`error from post, admin signup method ${error}`);
     }
-
-
-    let foundResults = await admin.findOne({ email: item.email })
-
-    // , async (err, foundResults) => {
-
-    // console.log("data from signup body", foundResults)
-
-    if (foundResults == null) {
-        console.log("no matching email found");
-
-        //     try {
-
-        //         // const newdata = new adminappr(item);
-        //         // const savedata = await newdata.save();
-        //         // console.log(`from post method, signup ${savedata}`);
-        //         // res.send(savedata);
-
-        res.status(200).send({ "status": 'Data Received and Waiting for Super Admin Approoval' });
-
-        //     } catch (error) {
-        //         console.log(`error from post, signup method ${error}`);
-        //     }
-
-
-    }
-    else {
-        console.log("matching email found");
-        res.status(401).send("Email already registered");
-
-
-    }
-
-
-    // });
-
 
 });
 
-
-//login
-// let email = "vaishakh174@gmail.com"
-// let password = "12345"
 
 router.post("", async (req, res) => {
 
@@ -74,37 +68,37 @@ router.post("", async (req, res) => {
 
     try {
 
-        admin.findOne({ email: emailf }, (err, foundResults) => {
+        let foundResults = await admin.findOne({ email: emailf })
 
-            console.log("error 400", foundResults, err)
+        console.log(" foundResults: ", foundResults)
 
-            if (foundResults == null) {
-                console.log("error 401 invalid email")
+        if (foundResults == null) {
+            console.log("error 401 invalid email")
 
-                res.status(401).send("invalid email or password");
-            }
+            res.status(401).send("invalid email ");
+        }
 
-            else if (foundResults.password != passwordf) {
-                console.log("error 401 invalid password")
-
-                res.status(401).send("invalid password");
-
-            }
-
-            else {
+        else {
+            const isMatch = bcrypt.compareSync(passwordf, foundResults.password);
+            if (isMatch) {
                 console.log("success login with jwt user", foundResults.name)
                 let payload = { subject: emailf + passwordf }
                 let token = jwt.sign(payload, "secretkey");
                 let USER = foundResults.name;
                 res.status(200).send({ token, USER });
             }
-        })
+            else {
+                console.log("error 401 invalid password")
+                res.status(401).send("invalid password");
+            }
 
+        }
     } catch (error) {
         console.log("error try login ", error)
 
     }
 
 });
+
 
 module.exports = router;
