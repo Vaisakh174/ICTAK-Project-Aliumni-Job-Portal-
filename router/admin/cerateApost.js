@@ -3,32 +3,7 @@ const router = express.Router();
 const DATA = require("../../models/admin/createNewJob.js");
 const GMT00 = require("../../convertGMT00toIST.js");
 const jwt = require('jsonwebtoken')
-
-
-//middleware
-function verifytoken(req, res, next) {
-    // console.log('headers=', req.headers.authorization);
-    if (!req.headers.authorization) {
-        return res.status(401).send('Unautherized request');
-    }
-    let token = req.headers.authorization.split(' ')[1];
-    if (token == 'null') {
-        return res.status(401).send('Unautherized request');
-    }
-    let payload = jwt.verify(token, 'secretkey');
-    // console.log("payload=", payload);
-    if (!payload) {
-        return res.status(401).send('Unautherized request');
-    }
-    // console.log("payload.subject=", payload.subject);
-
-    req.userId = payload.subject;
-    next();
-
-}
-
-
-
+const verifier=require('../../tokenVerifier')
 
 
 
@@ -41,7 +16,7 @@ router.get('/getall', async (req, res) => {
         let list = await DATA.find().sort({"Date":-1});
 
         console.log(`from getall job method`);
-        res.send(list);
+        res.status(200).send(list);
     }
     catch (error) {
         console.log(`error from get method ${error}`);
@@ -58,7 +33,7 @@ router.get('/getsingle/:id', async (req, res) => {
         let id = req.params.id;
         const singledata = await DATA.findById(id);
         console.log(`from get with id job method `);
-        res.send(singledata)
+        res.status(200).send(singledata)
     } catch (error) {
         console.log(`error from get method ${error}`);
     }
@@ -68,7 +43,7 @@ router.get('/getsingle/:id', async (req, res) => {
 
 
 //add data (post)
-router.post('/post', async (req, res) => {
+router.post('/post',verifier.verifytoken, async (req, res) => {
 
     try {
         // const DateNow = Date.now();
@@ -93,7 +68,7 @@ router.post('/post', async (req, res) => {
         const newdata = new DATA(item);
         const savedata = await newdata.save();
         console.log(`from post job method`);
-        res.send(savedata);
+        res.status(200).send(savedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -128,7 +103,7 @@ router.post('/postSearch', async (req, res) => {
 
         ).sort({"Date":-1});
 
-        res.send(result);
+        res.status(200).send(result);
 
 
 
@@ -142,13 +117,13 @@ router.post('/postSearch', async (req, res) => {
 
 
 // delete data
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete/:id',verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
         let deletedata = await DATA.findByIdAndDelete(id);
         // console.log(`from delete method ${deletedata}`);
-        res.send(deletedata);
+        res.status(200).send(deletedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -160,7 +135,7 @@ router.delete('/delete/:id', async (req, res) => {
 
 
 // update data
-router.put('/update', async (req, res) => {
+router.put('/update',verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.body._id;
@@ -189,7 +164,7 @@ router.put('/update', async (req, res) => {
             { $set: item }
         );
         // console.log(`from put method old data ${updatedata}`);
-        res.send(updatedata);
+        res.status(200).send(updatedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -213,7 +188,7 @@ router.put('/updateapply', async (req, res) => {
             { $set: item }
         );
         // console.log(`from put method old data ${updatedata}`);
-        res.send(updatedata);
+        res.status(200).send(updatedata);
 
     } catch (error) {
         console.log(`error from put method ${error}`);

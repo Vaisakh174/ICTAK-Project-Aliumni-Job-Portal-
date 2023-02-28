@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const { GridFsStorage } = require('multer-gridfs-storage')
 const promise = require('promise');
 var MONGOURI = process.env.mongoURI;
+const verifier=require('../../tokenVerifier')
 
 
 const conn = mongoose.createConnection(MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -63,7 +64,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 
         if (!file) {
 
-            res.send({ "status": "Upload Error" });
+            res.status(401).send({ "status": "Upload Error" });
 
         }
         else {
@@ -103,7 +104,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             const savedata = await newdata.save();
             console.log('from apply method saved data.jobname: ', savedata.Jobname);
 
-            res.send({ "status": "Upload Success" });
+            res.status(200).send({ "status": "Upload Success" });
 
 
         }
@@ -119,7 +120,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 
 
 
-router.get('/:filename', async (req, res) => {
+router.get('/:filename',verifier.verifytoken, async (req, res) => {
     await gfg.find({ filename: req.params.filename })
         .toArray((err, files) => {
             if (!files || files.length === 0) {
@@ -136,7 +137,7 @@ router.get('/:filename', async (req, res) => {
 });
 
 
-router.delete('/del/:filename', async (req, res) => {
+router.delete('/del/:filename',verifier.verifytoken, async (req, res) => {
     console.log(' req.params', req.params.filename)
 
     try {

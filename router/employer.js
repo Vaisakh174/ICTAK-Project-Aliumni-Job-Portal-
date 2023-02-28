@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const randomstring = require('randomstring');
 const OTP = require('../models/otpmodel');
+const verifier=require('../tokenVerifier')
 
 
 //registration

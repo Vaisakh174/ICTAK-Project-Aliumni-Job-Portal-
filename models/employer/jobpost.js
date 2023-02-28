@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const GMT00=require('../../convertGMT00toIST')
 
 const schema= mongoose.Schema;
 
@@ -12,7 +13,7 @@ const jobpost_detail = new schema({
     location:{type:String, required:true},
     salary:{type:String, required:true},
     jobdescription:{type:String, required:true},
-    
+    date: { type: String, default: GMT00.getCurrentTimeInIST() }
 
 })
 const jobpostData = mongoose.model('employerjobpost',jobpost_detail)

@@ -29,7 +29,7 @@ router.post('/new' , async (req, res) => {
         const newdata = new facultyData(item);
         const savedata = await newdata.save();
         // console.log(`from post method ${item.Date}`);
-        res.send(savedata);
+        res.status(200).send(savedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);

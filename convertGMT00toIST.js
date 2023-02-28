@@ -1,4 +1,6 @@
 const getCurrentTimeInIST = () => {
+
+
     // Get the current time in GMT
     const gmtTime = new Date();
     // console.log('gmt')
@@ -29,9 +31,18 @@ const getCurrentTimeInIST = () => {
 
 
 // // for local system
-//     const DateNow = Date.now();
-//     return Date(DateNow).toString()
+//     const DateNow = new Date();
+// const formattedTime = DateNow.toLocaleString('en-US', {
+//     year: 'numeric',
+//     month: 'short',
+//     day: 'numeric',
+//     hour: 'numeric',
+//     minute: 'numeric',
+//     second: 'numeric',
+//     hour12: true
+//   });
 
+//   return `${formattedTime} IST`;
 
 
 

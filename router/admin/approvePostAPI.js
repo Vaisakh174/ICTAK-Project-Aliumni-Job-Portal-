@@ -6,28 +6,9 @@ const jwt = require('jsonwebtoken')
 const GMT00 = require("../../convertGMT00toIST.js");
 const multerData = require("./fileUploadToLocaly.js");
 var filenameV;
+const verifier=require('../../tokenVerifier')
 
-//middleware
-function verifytoken(req, res, next) {
-    // console.log('headers=', req.headers.authorization);
-    if (!req.headers.authorization) {
-        return res.status(401).send('Unautherized request');
-    }
-    let token = req.headers.authorization.split(' ')[1];
-    if (token == 'null') {
-        return res.status(401).send('Unautherized request');
-    }
-    let payload = jwt.verify(token, 'secretkey');
-    // console.log("payload=", payload);
-    if (!payload) {
-        return res.status(401).send('Unautherized request');
-    }
-    // console.log("payload.subject=", payload.subject);
 
-    req.userId = payload.subject;
-    next();
-
-}
 
 
 
@@ -40,7 +21,7 @@ router.get('/getAllApproved', async (req, res) => {
         let list = await approvedPost.find().sort({ "Date": -1 });;
 
         console.log(`from get apprd method`);
-        res.send(list);
+        res.status(200).send(list);
     }
     catch (error) {
         console.log(`error from get method ${error}`);
@@ -56,7 +37,7 @@ router.get('/getAllApproved', async (req, res) => {
 
 
 //add data when approved (post)
-router.post('/posted', verifytoken, async (req, res) => {
+router.post('/posted', verifier.verifytoken, async (req, res) => {
     // console.log("hr",req.body.Jobname);
     try {
 
@@ -93,7 +74,7 @@ router.post('/posted', verifytoken, async (req, res) => {
         const newdata = new approvedPost(item);
         const savedata = await newdata.save();
         // console.log(`from post method ${savedata}`);
-        res.send(savedata);
+        res.status(200).send(savedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -102,13 +83,13 @@ router.post('/posted', verifytoken, async (req, res) => {
 });
 
 // delete data
-router.delete('/deleted/:id', verifytoken, async (req, res) => {
+router.delete('/deleted/:id', verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
         let deletedata = await approvedPost.findByIdAndDelete(id);
         // console.log(`from delete method ${deletedata}`);
-        res.send(deletedata);
+        res.status(200).send(deletedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -169,7 +150,7 @@ router.delete('/deleted/:id', verifytoken, async (req, res) => {
 //         const newdata = new approvePost(item);
 //         const savedata = await newdata.save();
 //         // console.log(`from post method ${savedata}`);
-//         res.send(savedata);
+//         res.status(200).send(savedata);
 
 //     } catch (error) {
 //         console.log(`error from get method ${error}`);
@@ -179,13 +160,13 @@ router.delete('/deleted/:id', verifytoken, async (req, res) => {
 
 
 //get all list (get) for data
-router.get('/getall', verifytoken, async (req, res) => {
+router.get('/getall', verifier.verifytoken, async (req, res) => {
 
     try {
         let list = await approvePost.find().sort({ "Date": -1 });
 
         // console.log(`from get method ${list}`);
-        res.send(list);
+        res.status(200).send(list);
     }
     catch (error) {
         console.log(`error from get method ${error}`);
@@ -195,13 +176,13 @@ router.get('/getall', verifytoken, async (req, res) => {
 });
 
 // fetch single data (get)
-router.get('/getsingle/:id', verifytoken, async (req, res) => {
+router.get('/getsingle/:id', verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
         const singledata = await approvePost.findById(id);
         // console.log(`from get with id method ${singledata}`);
-        res.send(singledata)
+        res.status(200).send(singledata)
     } catch (error) {
         console.log(`error from get method ${error}`);
     }
@@ -269,8 +250,8 @@ router.get('/getsingle/:id', verifytoken, async (req, res) => {
 //             const newdata = new approvePost(item);
 //             const savedata = await newdata.save();
 //             console.log('from apply method item: ', item);
-//             // res.send(savedata);
-//             res.send({ "status": "Upload Success" });
+//             // res.status(200).send(savedata);
+//             res.status(200).send({ "status": "Upload Success" });
 //             // console.log("fffff",fileName)
 
 //         }
@@ -304,13 +285,13 @@ router.get('/getsingle/:id', verifytoken, async (req, res) => {
 
 
 // delete data
-router.delete('/delete/:id', verifytoken, async (req, res) => {
+router.delete('/delete/:id', verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
         let deletedata = await approvePost.findByIdAndDelete(id);
         // console.log(`from delete method ${deletedata}`);
-        res.send(deletedata);
+        res.status(200).send(deletedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -319,7 +300,7 @@ router.delete('/delete/:id', verifytoken, async (req, res) => {
 });
 
 // update data
-router.put('/update', verifytoken, async (req, res) => {
+router.put('/update', verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.body._id;
@@ -361,7 +342,7 @@ router.put('/update', verifytoken, async (req, res) => {
             { $set: item }
         );
         // console.log(`from put method old data ${updatedata}`);
-        res.send(updatedata);
+        res.status(200).send(updatedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
