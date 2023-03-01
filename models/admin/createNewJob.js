@@ -18,7 +18,7 @@ const postAJob = new schema({
     Contact: { type: String, requied: true },
     Date: { type: String },
     ApplyStatus: { type: Number,requied: true  }
-    
+     
     
 });
 let jobDATA = mongoose.model("newJob", postAJob);
