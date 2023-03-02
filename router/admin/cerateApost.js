@@ -3,7 +3,7 @@ const router = express.Router();
 const DATA = require("../../models/admin/createNewJob.js");
 const GMT00 = require("../../convertGMT00toIST.js");
 const jwt = require('jsonwebtoken')
-const verifier=require('../../tokenVerifier')
+const verifier = require('../../tokenVerifier')
 
 
 
@@ -12,10 +12,12 @@ const verifier=require('../../tokenVerifier')
 router.get('/getall', async (req, res) => {
 
     try {
-        
-        let list = await DATA.find().sort({"Date":-1});
+        let currentDate = new Date(GMT00.getCurrentTimeInIST().replace('IST', ''));
+        let updatedata = await DATA.updateMany({ LastDate: { $lt: currentDate } }, { ApplyStatus: 0 })
+        console.log('updatedata getall job:', updatedata)
+        let list = await DATA.find().sort({ "LastDate": -1 });
 
-        console.log(`from getall job method`);
+        // console.log(`from getall job method`,list);
         res.status(200).send(list);
     }
     catch (error) {
@@ -43,7 +45,7 @@ router.get('/getsingle/:id', async (req, res) => {
 
 
 //add data (post)
-router.post('/post',verifier.verifytoken, async (req, res) => {
+router.post('/post', verifier.verifytoken, async (req, res) => {
 
     try {
         // const DateNow = Date.now();
@@ -61,14 +63,14 @@ router.post('/post',verifier.verifytoken, async (req, res) => {
             Schedule: req.body.Schedule,
             Language: req.body.Language,
             Contact: req.body.Contact,
-            // Date: Date(DateNow).toString(),
+            LastDate: new Date(req.body.LastDate),
             Date: GMT00.getCurrentTimeInIST(),
-            ApplyStatus:1
+            ApplyStatus: 1
         }
         const newdata = new DATA(item);
         const savedata = await newdata.save();
-        console.log(`from post job method`);
-        res.status(200).send(savedata);
+        console.log(`from post job method`, item.LastDate);
+        res.status(200).json("savedata");
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -101,7 +103,7 @@ router.post('/postSearch', async (req, res) => {
                 }
             ]
 
-        ).sort({"Date":-1});
+        ).sort({ "Date": -1 });
 
         res.status(200).send(result);
 
@@ -117,7 +119,7 @@ router.post('/postSearch', async (req, res) => {
 
 
 // delete data
-router.delete('/delete/:id',verifier.verifytoken, async (req, res) => {
+router.delete('/delete/:id', verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.params.id;
@@ -135,11 +137,11 @@ router.delete('/delete/:id',verifier.verifytoken, async (req, res) => {
 
 
 // update data
-router.put('/update',verifier.verifytoken, async (req, res) => {
+router.put('/update', verifier.verifytoken, async (req, res) => {
 
     try {
         let id = req.body._id;
-      
+
         let item = { //remove 'data' from below if we not pass data object from frontend
 
             Jobname: req.body.data.Jobname,
@@ -154,8 +156,8 @@ router.put('/update',verifier.verifytoken, async (req, res) => {
             Schedule: req.body.data.Schedule,
             Language: req.body.data.Language,
             Contact: req.body.data.Contact
-            
-           
+
+
         }
         // console.log("incoming data from update", req.body);
 
@@ -172,29 +174,30 @@ router.put('/update',verifier.verifytoken, async (req, res) => {
 
 });
 
-// update data for ApplyStatus
-router.put('/updateapply', async (req, res) => {
+// // update data for ApplyStatus
+// router.put('/updateapply', async (req, res) => {
 
-    try {let _id=req.body._id;
-        let item={
+//     try {
+//         let _id = req.body._id;
+//         let item = {
 
-            ApplyStatus:req.body.data
-        }
-        
-        // console.log("incoming data from update", req.body);
+//             ApplyStatus: req.body.data
+//         }
 
-        let updatedata = await DATA.findByIdAndUpdate(
-            { "_id": _id },
-            { $set: item }
-        );
-        // console.log(`from put method old data ${updatedata}`);
-        res.status(200).send(updatedata);
+//         // console.log("incoming data from update", req.body);
 
-    } catch (error) {
-        console.log(`error from put method ${error}`);
-    }
+//         let updatedata = await DATA.findByIdAndUpdate(
+//             { "_id": _id },
+//             { $set: item }
+//         );
+//         // console.log(`from put method old data ${updatedata}`);
+//         res.status(200).send(updatedata);
 
-});
+//     } catch (error) {
+//         console.log(`error from put method ${error}`);
+//     }
+
+// });
 
 
 module.exports = router;
