@@ -40,7 +40,7 @@ router.post('/signup', async (req, res) => {
             // const newdata = new admin(item);
             // const savedata = await newdata.save();
             // console.log(`from post method, signup ${savedata}`);
-           
+
 
             res.status(200).send({ "status": 'Data Received and Waiting for Super Admin Approoval' });
 
@@ -85,7 +85,8 @@ router.post("", async (req, res) => {
                 let payload = { subject: emailf + passwordf }
                 let token = jwt.sign(payload, "secretkey");
                 let USER = foundResults.name;
-                res.status(200).send({ token, USER });
+                let admin_id = foundResults._id;
+                res.status(200).send({ token: token, USER: USER, admin_id: admin_id });
             }
             else {
                 console.log("error 401 invalid password")

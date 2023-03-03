@@ -72,6 +72,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             let item = {
 
                 JobID: postData._id,
+                OwnerID: postData.OwnerID,
                 Jobname: postData.Jobname,
                 Place: postData.Place,
                 Salary: postData.Salary,

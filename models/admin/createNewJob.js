@@ -16,11 +16,12 @@ const postAJob = new schema({
     Schedule: { type: String, requied: true },
     Language: { type: String, requied: true },
     Contact: { type: String, requied: true },
-    Date: { type: String },
-    LastDate: { type: Date },
-    ApplyStatus: { type: Number,requied: true  }
-     
-    
+    OwnerID: { type: String, requied: true },
+    Date: { type: String, requied: true },
+    LastDate: { type: Date, requied: true },
+    ApplyStatus: { type: Number, requied: true }
+
+
 });
 let jobDATA = mongoose.model("newJob", postAJob);
 module.exports = jobDATA;

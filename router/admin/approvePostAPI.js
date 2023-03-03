@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const GMT00 = require("../../convertGMT00toIST.js");
 const multerData = require("./fileUploadToLocaly.js");
 var filenameV;
-const verifier=require('../../tokenVerifier')
+const verifier = require('../../tokenVerifier')
 
 
 
@@ -18,10 +18,32 @@ const verifier=require('../../tokenVerifier')
 router.get('/getAllApproved', async (req, res) => {
 
     try {
-        let list = await approvedPost.find().sort({ "Date": -1 });;
+        let list = await approvedPost.find().sort({ _id: -1 });;
 
         console.log(`from get apprd method`);
         res.status(200).send(list);
+    }
+    catch (error) {
+        console.log(`error from get method ${error}`);
+
+    }
+
+});
+
+//get all list for employer
+router.get('/getAllApprovedEmp/:id', async (req, res) => {
+
+    try {
+        // console.log(req.params.id)
+        let data = await approvedPost.find({ OwnerID: req.params.id }).sort({ _id: -1 });
+        if (data.length == 0) {
+            console.log(data)
+            res.status(401).send({ message: 'You Have No Approved Jobs' })
+        }
+        else {
+            console.log(`from get with id job method `, data);
+            res.status(200).send(data)
+        }
     }
     catch (error) {
         console.log(`error from get method ${error}`);
@@ -45,6 +67,7 @@ router.post('/posted', verifier.verifytoken, async (req, res) => {
 
 
             JobID: req.body.JobID,
+            OwnerID: req.body.OwnerID,
             Jobname: req.body.Jobname,
             Place: req.body.Place,
             Salary: req.body.Salary,
@@ -207,11 +230,11 @@ router.get('/getsingle/:id', verifier.verifytoken, async (req, res) => {
 
 //         let postData=JSON.parse(req.body.postData);
 //         let alumniData=JSON.parse(req.body.alumniData);
-        
+
 //         if (!file) {
-           
+
 //             res.send({ "status": "Upload Error" });
-     
+
 //         }
 //         else {
 
@@ -230,8 +253,8 @@ router.get('/getsingle/:id', verifier.verifytoken, async (req, res) => {
 //                 Language:postData.Language,
 //                 Contact:postData.Contact,
 //                 CompanyName:postData.CompanyName,
-    
-    
+
+
 //                 Alumni_name:alumniData.Alumni_name,
 //                 Alumni_phone:alumniData.Alumni_phone,
 //                 Alumni_email:alumniData.Alumni_email,
@@ -244,7 +267,7 @@ router.get('/getsingle/:id', verifier.verifytoken, async (req, res) => {
 //                 filename:  req.file.filename,
 //                 // Date: Date(DateNow).toString()
 //                 Date: GMT00.getCurrentTimeInIST()
-    
+
 //             }
 
 //             const newdata = new approvePost(item);
@@ -309,6 +332,7 @@ router.put('/update', verifier.verifytoken, async (req, res) => {
 
 
             JobID: req.body.data.JobID,
+            OwnerID: req.body.data.OwnerID,
             Jobname: req.body.data.Jobname,
             Place: req.body.data.Place,
             Salary: req.body.data.Salary,

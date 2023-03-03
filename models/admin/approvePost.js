@@ -4,6 +4,7 @@ const schema = mongoose.Schema;
 const approveJob = new schema({
 
     JobID: { type: String, requied: true },
+    OwnerID: { type: String, requied: true },
     Jobname: { type: String, requied: true },
     Place: { type: String, requied: true },
     Salary: { type: String, requied: true },

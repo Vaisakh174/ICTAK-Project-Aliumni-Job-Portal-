@@ -13,9 +13,10 @@ router.get('/getall', async (req, res) => {
 
     try {
         let currentDate = new Date(GMT00.getCurrentTimeInIST().replace('IST', ''));
+        // let updatedata = await DATA.updateMany({ ApplyStatus: 0 }, { ApplyStatus: 1 })  
         let updatedata = await DATA.updateMany({ LastDate: { $lt: currentDate } }, { ApplyStatus: 0 })
         console.log('updatedata getall job:', updatedata)
-        let list = await DATA.find().sort({ "LastDate": -1 });
+        let list = await DATA.find().sort({ _id: -1 });
 
         // console.log(`from getall job method`,list);
         res.status(200).send(list);
@@ -27,6 +28,26 @@ router.get('/getall', async (req, res) => {
 
 });
 
+
+// fetch all data for employer
+router.get('/getall/:id', async (req, res) => {
+
+    try {
+
+        const data = await DATA.find({ OwnerID: req.params.id });
+        if (!data) {
+            res.status(401).send({ message: 'You Are Not Created Any Job Posts' })
+        }
+        else {
+            console.log(`from get with id job method `);
+            res.status(200).send(data)
+        }
+
+    } catch (error) {
+        console.log(`error from get method ${error}`);
+    }
+
+});
 
 // fetch single data (get)
 router.get('/getsingle/:id', async (req, res) => {
@@ -63,13 +84,14 @@ router.post('/post', verifier.verifytoken, async (req, res) => {
             Schedule: req.body.Schedule,
             Language: req.body.Language,
             Contact: req.body.Contact,
+            OwnerID: req.body.OwnerID,
             LastDate: new Date(req.body.LastDate),
             Date: GMT00.getCurrentTimeInIST(),
             ApplyStatus: 1
         }
         const newdata = new DATA(item);
         const savedata = await newdata.save();
-        console.log(`from post job method`, item.LastDate);
+        console.log(`from post job method`, item);
         res.status(200).json("savedata");
 
     } catch (error) {

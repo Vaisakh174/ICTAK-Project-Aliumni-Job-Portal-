@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const randomstring = require('randomstring');
 const OTP = require('../models/otpmodel');
-const verifier=require('../tokenVerifier')
+const verifier = require('../tokenVerifier')
 
 
 //registration
@@ -185,7 +185,8 @@ router.post('/emplogin', async (req, res) => {
                 let payload = { subject: user.email + user.password }
                 let token = jwt.sign(payload, "secretkey");
                 let employer_name = user.name;
-                res.status(200).send({ token: token, employer_name: employer_name, message: 'Login Success' });
+                let employer_id = user._id;
+                res.status(200).send({ token: token, employer_name: employer_name, employer_id: employer_id, message: 'Login Success' });
             }
             else {
                 console.log("error 401 invalid password")
