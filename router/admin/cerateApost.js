@@ -155,7 +155,8 @@ router.put('/update', verifier.verifytoken, async (req, res) => {
             Benefits: req.body.data.Benefits,
             Schedule: req.body.data.Schedule,
             Language: req.body.data.Language,
-            Contact: req.body.data.Contact
+            Contact: req.body.data.Contact,
+            LastDate: new Date(req.body.data.LastDate)
 
 
         }
