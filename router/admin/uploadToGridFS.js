@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const { GridFsStorage } = require('multer-gridfs-storage')
 const promise = require('promise');
 var MONGOURI = process.env.mongoURI;
-const verifier=require('../../tokenVerifier')
+const verifier = require('../../tokenVerifier')
 
 
 const conn = mongoose.createConnection(MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -97,13 +97,13 @@ router.post('/', upload.single('file'), async (req, res) => {
                 Alumni_Placement: alumniData.Alumni_Placement,
                 Placed_company: alumniData.Placed_company,
                 filename: req.file.filename,
-                Date: GMT00.getCurrentTimeInIST()
-
+                Date: GMT00.getCurrentTimeInIST(),
+                LastDate: postData.LastDate
             }
 
             const newdata = new approvePost(item);
             const savedata = await newdata.save();
-            console.log('from apply method saved data.jobname: ', savedata.Jobname);
+            // console.log('from apply method saved item.LastDate: ', item.LastDate);
 
             res.status(200).send({ "status": "Upload Success" });
 
@@ -121,7 +121,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 
 
 
-router.get('/:filename',verifier.verifytoken, async (req, res) => {
+router.get('/:filename', verifier.verifytoken, async (req, res) => {
     await gfg.find({ filename: req.params.filename })
         .toArray((err, files) => {
             if (!files || files.length === 0) {
@@ -138,7 +138,7 @@ router.get('/:filename',verifier.verifytoken, async (req, res) => {
 });
 
 
-router.delete('/del/:filename',verifier.verifytoken, async (req, res) => {
+router.delete('/del/:filename', verifier.verifytoken, async (req, res) => {
     console.log(' req.params', req.params.filename)
 
     try {
@@ -165,7 +165,7 @@ router.delete('/del/:filename',verifier.verifytoken, async (req, res) => {
 
         })
     } catch (error) {
-        console.log('del catch err',error)
+        console.log('del catch err', error)
     }
 
 

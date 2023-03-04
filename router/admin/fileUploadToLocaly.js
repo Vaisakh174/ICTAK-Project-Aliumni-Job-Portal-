@@ -1,4 +1,4 @@
-const multer = require("multer") ;
+const multer = require("multer");
 
 
 
@@ -28,13 +28,13 @@ function checkdir() {
 const storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
-        callBack(null,'Uploaded_Files') //host use
+        callBack(null, 'Uploaded_Files') //host use
         // callBack(null,'Uploaded_Files') //local use
     },
     filename: (req, file, callBack) => {
 
-// console.log('cb')
-// console.log(file)
+        // console.log('cb')
+        // console.log(file)
 
 
         callBack(null, `alumni_resp_${file.originalname}_${Date.now()}.pdf`)
@@ -44,4 +44,4 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 
-module.exports={upload}
+module.exports = { upload }

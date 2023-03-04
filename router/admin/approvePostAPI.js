@@ -91,13 +91,14 @@ router.post('/posted', verifier.verifytoken, async (req, res) => {
             Alumni_branch: req.body.Alumni_branch,
             Alumni_Placement: req.body.Alumni_Placement,
             Placed_company: req.body.Placed_company,
-            Date: req.body.Date
+            Date: req.body.Date,
+            LastDate: req.body.LastDate
 
         }
         const newdata = new approvedPost(item);
         const savedata = await newdata.save();
-        // console.log(`from post method ${savedata}`);
-        res.status(200).send(savedata);
+        console.log('from post item:', savedata);
+        res.status(200).json(savedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
@@ -314,7 +315,7 @@ router.delete('/delete/:id', verifier.verifytoken, async (req, res) => {
         let id = req.params.id;
         let deletedata = await approvePost.findByIdAndDelete(id);
         // console.log(`from delete method ${deletedata}`);
-        res.status(200).send(deletedata);
+        res.status(200).json(deletedata);
 
     } catch (error) {
         console.log(`error from get method ${error}`);
